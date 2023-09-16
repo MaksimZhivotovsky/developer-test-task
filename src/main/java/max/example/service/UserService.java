@@ -15,6 +15,7 @@ import max.example.dto.RegistrationUserDto;
 import max.example.entities.User;
 import max.example.repositories.UserRepository;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,5 +66,31 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
         user.setRoles(List.of(roleService.getUserRole()));
         return userRepository.save(user);
+    }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new RuntimeException("User not found in ID : " + userId)
+        );
+    }
+    public List<User> findAll() {
+        return (List<User>) userRepository.findAll();
+    }
+        public User update(Long userId, User user) {
+        User dataUser = findById(userId);
+        if (dataUser != null) {
+            dataUser.setUsername(user.getUsername());
+            dataUser.setResponsibleTasks(user.getResponsibleTasks());
+            userRepository.save(dataUser);
+        }
+        return dataUser;
+    }
+
+    public void checkRightsUserChangeTask(Long userId, Principal principal) {
+        User user = findById(userId);
+        User userPrincipal = findByUsername(principal.getName()).get();
+        if(!user.getUserId().equals(userPrincipal.getUserId())) {
+            throw new  RuntimeException("Не тот пользователь");
+        }
     }
 }

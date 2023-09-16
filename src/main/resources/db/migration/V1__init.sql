@@ -1,23 +1,23 @@
 create table users (
-                       id                    bigserial,
+                       user_id                    bigserial,
                        username              varchar(30) not null unique,
                        password              varchar(80) not null,
                        email                 varchar(50) unique,
-                       primary key (id)
+                       primary key (user_id)
 );
 
 create table roles (
-                       id                    serial,
+                       role_id                    serial,
                        name                  varchar(50) not null,
-                       primary key (id)
+                       primary key (role_id)
 );
 
 CREATE TABLE users_roles (
                              user_id               bigint not null,
                              role_id               int not null,
                              primary key (user_id, role_id),
-                             foreign key (user_id) references users (id),
-                             foreign key (role_id) references roles (id)
+                             foreign key (user_id) references users (user_id),
+                             foreign key (role_id) references roles (role_id)
 );
 
 insert into roles (name)

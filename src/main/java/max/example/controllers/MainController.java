@@ -33,6 +33,6 @@ public class MainController {
     public Long userData(Principal principal) {
         User user = userRepository.findByUsername(principal.getName()).get();
 
-        return user.getId();
+        return user.getUserId();
     }
 }
