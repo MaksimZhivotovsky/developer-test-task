@@ -1,6 +1,5 @@
 package max.example.configs;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import max.example.service.UserService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
-//@RequiredArgsConstructor
 public class SecurityConfig {
     private  UserService userService;
     private  JwtRequestFilter jwtRequestFilter;

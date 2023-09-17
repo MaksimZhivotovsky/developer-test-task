@@ -1,9 +1,10 @@
 package max.example.service;
 
-import lombok.RequiredArgsConstructor;
-
+import max.example.entities.Task;
+import max.example.exceptions.TaskNotFoundException;
+import max.example.exceptions.UserNotFoundException;
+import max.example.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,6 +27,12 @@ public class UserService implements UserDetailsService {
     private  UserRepository userRepository;
     private  RoleService roleService;
     private  PasswordEncoder passwordEncoder;
+    private  TaskRepository taskRepository;
+
+    @Autowired
+    public void setTaskRepository(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -68,29 +75,67 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User findById(Long userId) {
+    public User findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("User not found in ID : " + userId)
+                () -> new UserNotFoundException("User not found in ID : " + userId)
         );
     }
-    public List<User> findAll() {
+    public List<User> findAllUsers() {
         return (List<User>) userRepository.findAll();
     }
-        public User update(Long userId, User user) {
-        User dataUser = findById(userId);
-        if (dataUser != null) {
-            dataUser.setUsername(user.getUsername());
-            dataUser.setResponsibleTasks(user.getResponsibleTasks());
+    public User setTaskResponsibleUser(
+                Long userId, Principal principal, User user, Long taskId) {
+
+        checkRightsUserChangeTask(userId, principal);
+        Task task = findTaskById(taskId);
+        User dataUser = userRepository.findById(user.getUserId()).get();
+        List<Task> tasks = dataUser.getResponsibleTasks();
+
+        if (!tasks.contains(task)) {
+            dataUser.addResponsibleTasks(task);
             userRepository.save(dataUser);
+        } else {
+            throw new TaskNotFoundException("Эта задача уже назначана пользователю");
         }
+
         return dataUser;
     }
 
-    public void checkRightsUserChangeTask(Long userId, Principal principal) {
-        User user = findById(userId);
+    public Task findTaskById(Long taskId) {
+        return taskRepository.findById(taskId).orElseThrow(
+                () -> new TaskNotFoundException("Task not found ID : " + taskId)
+        );
+    }
+
+    public Task saveTask(Long userId, Task task) {
+        if (taskRepository.findByName(task.getName()) != null) {
+            throw new TaskNotFoundException("Такое задание уже сушествует");
+        }
+        User user = findUserById(userId);
+        task.setUser(user);
+        return taskRepository.save(task);
+    }
+
+    public Task updateTask(Long userId, Principal principal, Long taskId, Task task) {
+        checkRightsUserChangeTask(userId, principal);
+        Task dataTask = findTaskById(taskId);
+        if (dataTask != null) {
+            dataTask.setName(task.getName());
+            dataTask.setStatus(task.getStatus());
+            taskRepository.save(dataTask);
+        }
+        return dataTask;
+    }
+    public void deleteTaskById(Long userId, Principal principal, Long taskId) {
+        checkRightsUserChangeTask(userId, principal);
+        taskRepository.deleteById(taskId);
+    }
+
+    private void checkRightsUserChangeTask(Long userId, Principal principal) {
+        User user = findUserById(userId);
         User userPrincipal = findByUsername(principal.getName()).get();
         if(!user.getUserId().equals(userPrincipal.getUserId())) {
-            throw new  RuntimeException("Не тот пользователь");
+            throw new UserNotFoundException("Этот пользователь не создатель этой задачи");
         }
     }
 }

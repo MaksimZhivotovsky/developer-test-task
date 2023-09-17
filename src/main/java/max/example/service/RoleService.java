@@ -3,9 +3,7 @@ package max.example.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import max.example.entities.Role;
-import max.example.entities.User;
 import max.example.repositories.RoleRepository;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

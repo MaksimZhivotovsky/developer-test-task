@@ -20,6 +20,19 @@ CREATE TABLE users_roles (
                              foreign key (role_id) references roles (role_id)
 );
 
+CREATE TABLE tasks (
+                              task_id bigserial NOT NULL,
+                              "name" varchar(255) NULL,
+                              status varchar(255) NULL,
+                              user_id int8 NULL,
+                              CONSTRAINT tasks_pkey FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE responsible_user_tasks (
+                                               responsible_user_id int8 NOT NULL,
+                                               task_id int8 NOT NULL
+);
+
 insert into roles (name)
 values
     ('ROLE_USER'), ('ROLE_ADMIN');

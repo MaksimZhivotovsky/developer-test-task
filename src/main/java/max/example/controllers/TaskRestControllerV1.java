@@ -3,7 +3,6 @@ package max.example.controllers;
 import lombok.AllArgsConstructor;
 import max.example.entities.Task;
 import max.example.service.TaskService;
-import max.example.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

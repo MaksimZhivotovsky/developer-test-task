@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -39,10 +40,6 @@ public class Task {
             },
             mappedBy = "responsibleTasks")
     @JsonIgnore
-    private List<User> responsibleUsers;
+    private List<User> responsibleUsers = new ArrayList<>();
 
-//    public User addResponsibleUser(User responsibleUser) {
-//        responsibleUsers.add(responsibleUser);
-//        return responsibleUser;
-//    }
 }
