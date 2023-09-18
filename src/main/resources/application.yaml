@@ -7,7 +7,7 @@ jwt:
   lifetime: 30m
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/developer-test-task
+    url: jdbc:postgresql://localhost:5432/developer-test-task
     username: postgres
     password: 1234
   jpa:
@@ -16,7 +16,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
   flyway:
     baseline-on-migrate: true
     locations: classpath:db/migration
