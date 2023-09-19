@@ -29,6 +29,7 @@ public class UserRestControllerV1 {
     }
 
 
+
     @PostMapping(value = "/{userId}/tasks")
     public ResponseEntity<Task> saveTask(
             @PathVariable("userId") Long userId, @RequestBody Task task
@@ -44,6 +45,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(
                 userService.updateTask(userId, principal, taskId, task), HttpStatus.OK);
     }
+
     @DeleteMapping(value = "/{userId}/tasks/{taskId}")
     public void deleteTaskById(
             @PathVariable("userId") Long userId, Principal principal,
@@ -51,6 +53,7 @@ public class UserRestControllerV1 {
     ) {
         userService.deleteTaskById(userId, principal, taskId);
     }
+
 
     @PatchMapping(value = "/{userId}/tasks/{taskId}")
     public void addTaskResponsibleUser(

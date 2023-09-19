@@ -80,7 +80,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>5.2.4</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5432/developer-test-task</url>
+                    <url>jdbc:postgresql://localhost:5432/developer_test_task</url>
                     <user>postgres</user>
                     <password>1234</password>
                 </configuration>

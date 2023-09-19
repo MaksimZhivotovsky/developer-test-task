@@ -32,6 +32,7 @@ CREATE TABLE responsible_user_tasks (
                                                responsible_user_id int8 NOT NULL,
                                                task_id int8 NOT NULL
 );
+-- alter table responsible_user_tasks add constraint FK_task_id foreign key (task_id) references tasks;
 
 insert into roles (name)
 values
